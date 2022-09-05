@@ -1,0 +1,1 @@
+WRITE_PRD(RS1 == RS2);

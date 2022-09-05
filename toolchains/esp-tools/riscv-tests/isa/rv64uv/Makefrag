@@ -1,0 +1,37 @@
+#=======================================================================
+# Makefrag for rv64uv tests
+#-----------------------------------------------------------------------
+
+rv64uv_sc_tests = \
+	wakeup fence \
+	vsetcfg vsetvlh keepcfg \
+	vmca vmcs \
+	vssd vssw vssh vssb vlsd vlsw vlsh vlsb vlswu vlshu vlsbu \
+	vsad vsaw vsah vsab vlad vlaw vlah vlab vlawu vlahu vlabu \
+	eidx \
+	eidx_empty \
+	vlb vlbu vlh vlhu vlw vlwu vld \
+	vsb vsh vsw vsd \
+	vl_empty vs_empty vlx_empty vsx_empty vamo_empty \
+	vlxb vlxbu vlxh vlxhu vlxw vlxwu vlxd \
+	vsxb vsxh vsxw vsxd \
+	amoadd_d amoand_d amomax_d amomaxu_d amomin_d amominu_d amoor_d amoswap_d amoxor_d \
+	amoadd_w amoand_w amomax_w amomaxu_w amomin_w amominu_w amoor_w amoswap_w amoxor_w \
+	imul \
+	fcvt fcvt_hs \
+	vvadd_d vvadd_w vvadd_fd vvadd_fw \
+	vvmul_d \
+	overlap \
+	sched_sreg_xbar sched_fadd sched_waw sched_war \
+	pointer \
+	vcjal vfirst vfence \
+	cmp fcmp \
+
+rv64uv_sc_vec_tests = \
+	 \
+
+rv64uv_p_tests = $(addprefix rv64uv-p-, $(rv64uv_sc_tests))
+rv64uv_v_tests = $(addprefix rv64uv-v-, $(filter-out vsetcfgi vsetcfg vsetvlh,$(rv64uv_sc_tests))) #FIXME: fix long tests in v env
+rv64uv_vp_tests = $(addprefix rv64uv-vp-, $(filter-out vsetcfgi vsetcfg vsetvlh,$(rv64uv_sc_tests))) #FIXME: fix long tests in v env
+
+spike_tests += $(rv64uv_p_tests) $(rv64uv_vp_tests) $(rv64uv_v_tests)
