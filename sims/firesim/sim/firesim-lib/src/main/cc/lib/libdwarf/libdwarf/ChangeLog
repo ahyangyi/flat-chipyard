@@ -1,0 +1,147 @@
+2019-01-31   David Anderson
+      * dwarf_alloc.c, dwarf_die_deliv.c,dwarf_dnames.c, dwarf_dsc.c,
+        dwarf_elf_access.c,dwarf_frame.c,dwarf_frame2.c,
+        dwarf_gdbindex.c,dwarf_generic_init.c,dwarf_init_finish.c,
+        dwarf_line.c,dwarf_loc.c,dwarf_loc2.h,dwarf_machoread.c,
+        dwarf_macro.c,dwarf_macro5.c,dwarf_opaque.h,dwarf_peread.c,
+        dwarf_tsearchhash.c,dwarf_util.c,dwarf_xu_index.c,pro_alloc.c,
+        pro_arange.c,pro_expr.c,pro_line.c,pro_macinfo.c,
+        pro_section.c,pro_types.c: Fixed 56 bugs found
+        by llvm's scan-build tool.
+2019-01-27   David Anderson
+      * dwarf_form.c,dwarf_gdbindex.c,dwarf_object_read_common.c,
+        pro_forms.c,pro_section.c: Remove trailing whitespace.
+2019-01-27   David Anderson
+      * dwarf_object_read_common.c,dwarf_object_read_common.h:
+        Now uses the ISO (1990) datatypes off_t and size_t and
+        ssize_t for lseek, read.
+2019-01-20   David Anderson
+      * dwarf_base_types.h: Remove Dwarf_ufixed and 
+        Dwarf_sfixed and all __int32_t and __uint32_t use.
+        __uint64_t Dwarf_ufixed64 and __int64_t Dwarf_sfixed64
+        have also been removed.
+      * dwarf_elf_access.c: Remove use of those types here too.
+      * dwarf_form.c: Remove references to those types here
+        too.
+      * dwarf_gdbindex.c, dwarf_gdbindex.h: Replace 
+        gdbindex_offset_type headerval[6]
+        by char gfs[4][6] (replacing dependence on the  int32
+        sorts of types.
+      * dwarf_macho_loader.h: Clarified that the uint32_t sorts
+        of things are just comments.
+      * libdwarf.h.in: Fixed a too-long comment line.
+      * libdwarfdefs.h: Removed all the *UINT32* and
+        *uint64* use.
+      * pro_forms.c,pro_opaque, pro_section.c: 
+        Removed all the Dwarf_sfixed and ufixed
+        stuff here too.
+2019-01-14   David Anderson
+     * dwarf_frame.c: Add support for DW_CFA_MIPS_advance_loc8
+       (though pointless, really) so we can test all the code
+       paths of advance_loc production. 
+     * dwarf_frame2.c: Minor formatting cleanup.
+     * dwarf_line_table_reader_common.h: Now tests for
+       negative line numbers in the table and returns an error
+       with the new error code DW_DLE_LINE_TABLE_LINENO_ERROR
+       (which indicates a corrupted line table).
+     * dwarf_names.c, dwarf_names.h, dwarf_names_enum.h,
+       dwarf_names_new.h: Regenerated. Just an update of
+       the sourcedate comment.
+     * dwarf_opaque.h: Delete a trailing whitespace character.
+     * libdwarf.h.in: Add error DW_DLE_LINE_TABLE_LINENO_ERROR.
+     * pro_expr.c: Remove trailing whitespace.
+     * pro_frame.c( dwarf_add_fde_inst_a): A new simpler 
+       more portable implementation of the DW_CFA_advance_loc
+       code.
+     * pro_opaque.h: Delete blank last line.
+2019-01-12   David Anderson
+     * dwarf_abbrev.c,dwarf_abbrev.h,dwarf_base_types.h,
+       dwarf_die_deliv.c, dwarf_dsc.c,dwarf_error.c,
+       dwarf_error.h,dwarf_form.c,dwarf_frame.c,
+       dwarf_frame.h,dwarf_frame2.c,dwarf_global.h,
+       dwarf_leb.c,dwarf_line.c,dwarf_line.h,
+       dwarf_line_table_reader_common.h,dwarf_loc.c,
+       dwarf_loc2.h,dwarf_macro5.c,dwarf_macro5.h,dwarf_opaque.h,
+       dwarf_print_lines.c,dwarf_query.c,dwarf_util.c,dwarf_util.h,
+       pro_arange.c,pro_error.c,pro_error.h,pro_expr.c,
+       pro_forms.c,pro_frame.c,pro_frame.h,pro_line.h,
+       pro_opaque.h,pro_reloc_stream.c,pro_section.c,
+       pro_types.c: Removed all instances of use of
+       Dwarf_Word, Dwarf_Sword, __int32_t (and other such).
+       In nearly all cases the use was gratuitous. In a few
+       cases some very old code was problematic (dwarf_frame2.c)
+       and is fixed.
+2019-01-10   David Anderson
+     * libdwarf_version.h: New date string.
+2019-01-09   David Anderson
+     * dwarf_original_elf_init.c: One of the calls to
+       dwarf_object_init_b() was checking the result code
+       then doing a statment that will crash the caller unless
+       the result code was DW_DLV_OK.
+2019-01-05   David Anderson
+     * dwarf_generic_init.c: Removed trailing whitespace.
+2019-01-04   David Anderson
+     * dwarf_generic_init.c: After closing de_fd,
+       set de_owns_fd FALSE as an extra guard.
+2019-01-04   David Anderson
+     * dwarf_object_detector.c: Ensure the configure
+       can set O_BINARY if necessary so open() will use it.
+2019-01-04   David Anderson
+     * dwarf_elf_access.c,dwarf_generic_init.c,dwarf_machoread.c,
+       dwarf_opaque.h,dwarf_peread.c: Simplified and unified
+       the requirement that dwarf_finish() close the fd
+       that dwarf_init_path() opened.
+2019-01-04   David Anderson
+     * configure.ac: Version 20190104
+     * dwarf_elf_access.c: Now records that libdwarf owns
+       its fd in the elf case and arranges to close it
+       when the Dwarf_Debug is being closed.
+       This is the case of dwarf_init_path().
+       Hopefully will address Coverity CID 190599.
+     * dwarf_object_detector.c: Now that struct stat
+       is not in use delete the sys/types.h and sys/stat.h
+       includes as they are no longer needed.
+     * dwarf_generic_init(dwarf_init_path): When libdwarf 
+       owns the fd, call _dwarf_elf_record_owned_fd()
+       to record that information.
+       In the default case (not a known object type)
+       we also now close the fd.
+     * dwarf_opaque.h: Add prototype for 
+       _dwarf_elf_record_owned_fd, a new internal function
+       so the fd can be closed by libdwarf only when 
+       libdwarf owns it.
+     * libdwarf_version.h: New date string.
+
+2019-01-03   David Anderson
+     * dwarf_object_detector.c: Had a pointless call to stat()
+       which was noticed by Coverity CID  190601
+       as a possible race condition. Deleted the call.
+     * dwarf_generic_init(dwarf_init_path):
+       Serious bugs introduced yesterday.
+       Coverity CID 190600.
+       the fd is remembered in the Dwarf_Debug
+       being created and will eventually be closed
+       when the Dwarf_Debug is closed.
+2019-01-02   David Anderson
+     * dwarf_die_deliv.c(dwarf_get_real_section_name): 
+       Uninitialized local char array
+       could lead to unpredictable behavior, so now initialized
+       with a NUL first byte so the array is a legal string.
+       Coverity CID CID 190598.
+     * ChangeLog: Renamed ChangeLog2018. New ChangeLog created.
+     * Makefile.am: Added ChangeLog2018 to files in dist.
+     * gennames.c(GenerateOneSet): Fixing Coverity CID 190603
+       by removing an unused (unusable) value. 
+     * dwarf_machoread.c.The include order
+       is now libdwarfdefs.h then dwarf_base_types.h
+     * dwarf_peread.c: The include order
+       is now libdwarfdefs.h then dwarf_base_types.h
+       Was leaking memory re-malloc into local var
+       localdoas. Coverity CID 190602.
+     * dwarf_generic_init.c(dwarf_init_path): 
+       We clarify the use of fd and in case
+       of failure ensure we close the fd if
+       it is open (fd >= 0). 
+     * dwarf_object_detector.c(dwarf_object_detector_path):
+       Mistaken 'fix'
+     * libdwarf_version.h: Updated version string.

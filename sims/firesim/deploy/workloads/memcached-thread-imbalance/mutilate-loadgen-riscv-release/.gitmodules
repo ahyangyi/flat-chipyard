@@ -1,0 +1,4 @@
+[submodule "mutilate"]
+	path = mutilate
+	url = https://github.com/firesim/mutilate
+	branch = firesim
