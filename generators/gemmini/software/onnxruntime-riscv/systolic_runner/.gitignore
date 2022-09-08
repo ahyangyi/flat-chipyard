@@ -1,0 +1,16 @@
+*.json
+*.data
+*.o
+**/ort_test
+**/resnet_train
+**/batch_image.txt
+**/bert_qkv.txt
+**/batch_out.txt
+quantization/models/*
+halide_interop/model_converter/generated/*
+imagenet_runner/tools/batch_out.txt
+quantization/scan_op.txt
+imagenet_runner/benchmark/
+mnist_training/mnist
+mnist_training/mnist_train
+mnist_training/mnist.zip
