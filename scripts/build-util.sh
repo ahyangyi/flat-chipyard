@@ -29,10 +29,10 @@ module_prepare() ( # <submodule> [ignored-submodule..]
     echo "==>  Initializing ${name} submodule"
     if [ $# -gt 0 ] ; then
 	(set -x; git submodule update --init "${dir}")
-        while [ -n "$1" ] ; do
-	    (set -x; git -C "${dir}" config submodule."${1}".update none)
-            shift
-        done
+        #while [ -n "$1" ] ; do
+	    #(set -x; git -C "${dir}" config submodule."${1}".update none)
+        #    shift
+        #done
     fi
     (set -x; git submodule update --init --recursive "${dir}")
 )
